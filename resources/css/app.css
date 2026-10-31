@@ -1,0 +1,165 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+
+.form-page {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 0 20px 50px;
+}
+
+.form-heading {
+    margin-bottom: 25px;
+}
+
+.eyebrow {
+    color: #087f5b;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.form-heading h1 {
+    margin: 10px 0;
+    color: #163c32;
+    font-size: 32px;
+}
+
+.form-heading p,
+.form-card-heading p {
+    color: #687a73;
+    line-height: 1.7;
+}
+
+.form-card {
+    padding: 30px;
+    background: #ffffff;
+    border: 1px solid #e2eee7;
+    border-radius: 18px;
+    box-shadow: 0 10px 35px rgba(22, 60, 50, 0.08);
+}
+
+.form-card-heading {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e8f0eb;
+}
+
+.form-card-heading h2 {
+    color: #163c32;
+    margin: 0;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 9px;
+    color: #24483b;
+    font-weight: 700;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid #d4e2d9;
+    border-radius: 10px;
+    background: #fbfdfb;
+    color: #243c32;
+    font: inherit;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #23966b;
+    box-shadow: 0 0 0 3px rgba(35, 150, 107, 0.12);
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 7px;
+    color: #718078;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #16845b;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background: #106b49;
+}
+
+.btn-secondary {
+    background: #edf4ef;
+    color: #28513e;
+}
+
+.alert-error {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background: #fff0f0;
+    color: #a32929;
+}
+
+@media (max-width: 600px) {
+    .form-page {
+        margin-top: 24px;
+        padding: 0 14px 30px;
+    }
+
+    .form-heading h1 {
+        font-size: 26px;
+    }
+
+    .form-card {
+        padding: 20px 16px;
+    }
+
+    .form-actions .btn {
+        flex: 1;
+    }
+}
