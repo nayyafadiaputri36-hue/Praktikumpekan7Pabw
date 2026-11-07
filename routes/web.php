@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -10,7 +9,7 @@ use App\Http\Controllers\RegisterController;
 Route::get('/', [LaporBanjirController::class, 'home'])
     ->name('home');
 
-// Form laporan warga (tanpa login)
+// Form laporan warga
 Route::get('/lapor', [LaporBanjirController::class, 'create'])
     ->name('lapor');
 
@@ -35,12 +34,16 @@ Route::get('/register', [RegisterController::class, 'showRegister'])
 Route::post('/register', [RegisterController::class, 'register'])
     ->name('register.process');
 
-// Halaman khusus petugas yang sudah login
+// Halaman khusus petugas
 Route::middleware(['petugas'])->group(function () {
 
     // Daftar laporan
     Route::get('/laporan', [LaporBanjirController::class, 'index'])
         ->name('laporan.index');
+
+    // Detail laporan
+    Route::get('/laporan/{id}', [LaporBanjirController::class, 'show'])
+        ->name('laporan.show');
 
     // Edit laporan
     Route::get('/laporan/{id}/edit', [LaporBanjirController::class, 'edit'])
@@ -62,5 +65,4 @@ Route::middleware(['petugas'])->group(function () {
     Route::get('/profil', function () {
         return view('profil');
     })->name('profil');
-
 });

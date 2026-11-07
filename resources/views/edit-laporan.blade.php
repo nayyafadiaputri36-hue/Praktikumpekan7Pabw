@@ -58,6 +58,28 @@
     border-color: #4299d5;
 }
 
+.edit-group small {
+    display: block;
+    color: #8195a5;
+    margin-top: 7px;
+}
+
+.error-message {
+    color: #dc2626;
+    font-size: 12px;
+    display: block;
+    margin-top: 6px;
+}
+
+.current-photo {
+    width: 100%;
+    max-width: 300px;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
 .edit-actions {
     display: flex;
     gap: 12px;
@@ -81,6 +103,17 @@
     border-radius: 9px;
     text-decoration: none;
 }
+
+@media(max-width:600px) {
+    .edit-actions {
+        flex-direction: column;
+    }
+
+    .edit-actions a,
+    .edit-actions button {
+        text-align: center;
+    }
+}
 </style>
 
 <div class="edit-page">
@@ -92,6 +125,7 @@
 
         @if ($errors->any())
             <div style="background:#fee2e2;color:#991b1b;padding:12px;border-radius:8px;margin-bottom:20px;">
+                <strong>Periksa kembali data Anda.</strong>
                 <ul>
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -100,42 +134,162 @@
             </div>
         @endif
 
-        <form action="{{ route('laporan.update', $laporan->id) }}" method="POST">
+        <form action="{{ route('laporan.update', $laporan->id) }}"
+              method="POST"
+              enctype="multipart/form-data">
+
             @csrf
             @method('PUT')
 
             <div class="edit-group">
-                <label>Nama Pelapor</label>
-                <input type="text" name="nama"
-                    value="{{ old('nama', $laporan->nama_pelapor) }}" required>
+                <label>Nama Pelapor *</label>
+                <input type="text"
+                       name="nama_pelapor"
+                       value="{{ old('nama_pelapor', $laporan->nama_pelapor) }}"
+                       maxlength="100"
+                       required>
+                @error('nama_pelapor')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="edit-group">
-                <label>Lokasi Kejadian</label>
-                <input type="text" name="lokasi"
-                    value="{{ old('lokasi', $laporan->lokasi) }}" required>
+                <label>Nomor HP *</label>
+                <input type="tel"
+                       name="no_hp"
+                       value="{{ old('no_hp', $laporan->no_hp) }}"
+                       maxlength="20"
+                       required>
+                @error('no_hp')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="edit-group">
-                <label>Tanggal Kejadian</label>
-                <input type="date" name="tanggal_kejadian"
-                    value="{{ old('tanggal_kejadian', $laporan->tanggal_kejadian->format('Y-m-d')) }}"
-                    required>
+                <label>Lokasi Kejadian *</label>
+                <input type="text"
+                       name="lokasi"
+                       value="{{ old('lokasi', $laporan->lokasi) }}"
+                       maxlength="150"
+                       required>
+                @error('lokasi')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="edit-group">
-                <label>Tinggi Genangan Air (cm)</label>
-                <input type="number" name="tinggi_air"
-                    value="{{ old('tinggi_air', $laporan->tinggi_genangan) }}"
-                    min="1" required>
+                <label>Kecamatan *</label>
+                <select name="kecamatan" required>
+                    <option value="">Pilih kecamatan</option>
+
+                    @foreach ([
+                        'Dayeuhkolot',
+                        'Baleendah',
+                        'Bojongsoang',
+                        'Rancaekek',
+                        'Majalaya',
+                        'Cileunyi',
+                        'Banjaran',
+                        'Pameungpeuk',
+                        'Katapang',
+                        'Margahayu'
+                    ] as $kecamatan)
+
+                        <option value="{{ $kecamatan }}"
+                            @selected(old('kecamatan', $laporan->kecamatan) == $kecamatan)>
+                            {{ $kecamatan }}
+                        </option>
+
+                    @endforeach
+                </select>
+                @error('kecamatan')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="edit-group">
-                <label>Keterangan Kejadian</label>
-                <textarea name="keterangan" rows="4" required>{{ old('keterangan', $laporan->keterangan) }}</textarea>
+                <label>Tanggal Kejadian *</label>
+                <input type="date"
+                       name="tanggal_kejadian"
+                       value="{{ old('tanggal_kejadian', $laporan->tanggal_kejadian ? $laporan->tanggal_kejadian->format('Y-m-d') : '') }}"
+                       required>
+                @error('tanggal_kejadian')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="edit-group">
+                <label>Tinggi Air (cm) *</label>
+                <input type="number"
+                       name="tinggi_air"
+                       value="{{ old('tinggi_air', $laporan->tinggi_air) }}"
+                       min="1"
+                       required>
+                @error('tinggi_air')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="edit-group">
+                <label>Keterangan Kejadian *</label>
+                <textarea name="keterangan"
+                          rows="4"
+                          maxlength="500"
+                          required>{{ old('keterangan', $laporan->keterangan) }}</textarea>
+                @error('keterangan')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="edit-group">
+                <label>Status Penanganan *</label>
+
+                <select name="status" required>
+                    @foreach (['Menunggu', 'Diproses', 'Selesai'] as $status)
+                        <option value="{{ $status }}"
+                            @selected(old('status', $laporan->status) == $status)>
+                            {{ $status }}
+                        </option>
+                    @endforeach
+                </select>
+
+                @error('status')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="edit-group">
+                <label>Foto Bukti Saat Ini</label>
+
+                @if ($laporan->foto)
+                    <img
+                        src="{{ asset('storage/' . $laporan->foto) }}"
+                        alt="Foto bukti banjir"
+                        class="current-photo">
+                @else
+                    <p>Belum ada foto bukti.</p>
+                @endif
+            </div>
+
+            <div class="edit-group">
+                <label>Ganti Foto Bukti</label>
+
+                <input type="file"
+                       name="foto"
+                       accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+
+                <small>
+                    Kosongkan jika tidak ingin mengganti foto.
+                    Format JPG, JPEG, PNG maksimal 2 MB.
+                </small>
+
+                @error('foto')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="edit-actions">
+
                 <a href="{{ route('laporan.index') }}" class="back-btn">
                     Kembali
                 </a>
@@ -143,6 +297,7 @@
                 <button type="submit" class="edit-btn">
                     Simpan Perubahan
                 </button>
+
             </div>
 
         </form>

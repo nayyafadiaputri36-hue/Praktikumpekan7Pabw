@@ -13,14 +13,18 @@ class Laporan extends Model
 
     protected $fillable = [
         'nama_pelapor',
+        'no_hp',
         'lokasi',
-        'tinggi_genangan',
+        'kecamatan',
+        'tinggi_air',
         'tanggal_kejadian',
         'keterangan',
+        'foto',
+        'status',
     ];
 
     protected $casts = [
-        'tinggi_genangan' => 'integer',
+        'tinggi_air' => 'integer',
         'tanggal_kejadian' => 'date',
     ];
 }

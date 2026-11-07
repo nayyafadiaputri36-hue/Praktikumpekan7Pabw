@@ -113,6 +113,13 @@
         font-size: 12px;
     }
 
+    .error-message {
+        color: #d32f2f;
+        font-size: 12px;
+        margin-top: 6px;
+        display: block;
+    }
+
     .alert-error {
         background: #fff1f1;
         border: 1px solid #ffcaca;
@@ -222,25 +229,58 @@
             </div>
         @endif
 
-        <form action="{{ route('lapor.store') }}" method="POST">
+        <form action="{{ route('lapor.store') }}"
+              method="POST"
+              enctype="multipart/form-data">
+
             @csrf
 
             <div class="form-group">
-                <label for="nama">Nama Pelapor *</label>
-                <input
-                    type="text"
-                    id="nama"
-                    name="nama"
-                    value="{{ old('nama') }}"
-                    placeholder="Masukkan nama lengkap"
-                    maxlength="100"
-                    required
-                >
+                <label for="nama_pelapor">Nama Pelapor *</label>
+                <input type="text"
+                       id="nama_pelapor"
+                       name="nama_pelapor"
+                       value="{{ old('nama_pelapor') }}"
+                       placeholder="Masukkan nama lengkap"
+                       maxlength="100"
+                       required>
+                @error('nama_pelapor')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="no_hp">Nomor HP *</label>
+                <input type="tel"
+                       id="no_hp"
+                       name="no_hp"
+                       value="{{ old('no_hp') }}"
+                       placeholder="Contoh: 081234567890"
+                       maxlength="20"
+                       required>
+                @error('no_hp')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="form-group">
                 <label for="lokasi">Lokasi Kejadian *</label>
-                <select id="lokasi" name="lokasi" required>
+                <input type="text"
+                       id="lokasi"
+                       name="lokasi"
+                       value="{{ old('lokasi') }}"
+                       placeholder="Contoh: Jalan Raya Dayeuhkolot"
+                       maxlength="150"
+                       required>
+                @error('lokasi')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="kecamatan">Kecamatan *</label>
+
+                <select id="kecamatan" name="kecamatan" required>
                     <option value="">Pilih kecamatan</option>
 
                     @foreach ([
@@ -254,53 +294,82 @@
                         'Pameungpeuk',
                         'Katapang',
                         'Margahayu'
-                    ] as $lokasi)
+                    ] as $kecamatan)
 
-                        <option value="{{ $lokasi }}"
-                            @selected(old('lokasi') === $lokasi)>
-                            {{ $lokasi }}
+                        <option value="{{ $kecamatan }}"
+                            @selected(old('kecamatan') === $kecamatan)>
+                            {{ $kecamatan }}
                         </option>
 
                     @endforeach
                 </select>
+
+                @error('kecamatan')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="form-group">
                 <label for="tanggal_kejadian">Tanggal Kejadian *</label>
-                <input
-                    type="date"
-                    id="tanggal_kejadian"
-                    name="tanggal_kejadian"
-                    value="{{ old('tanggal_kejadian', date('Y-m-d')) }}"
-                    max="{{ date('Y-m-d') }}"
-                    required
-                >
+                <input type="date"
+                       id="tanggal_kejadian"
+                       name="tanggal_kejadian"
+                       value="{{ old('tanggal_kejadian', date('Y-m-d')) }}"
+                       max="{{ date('Y-m-d') }}"
+                       required>
+                @error('tanggal_kejadian')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="form-group">
-                <label for="tinggi_air">Tinggi Genangan Air (cm) *</label>
-                <input
-                    type="number"
-                    id="tinggi_air"
-                    name="tinggi_air"
-                    value="{{ old('tinggi_air') }}"
-                    placeholder="Contoh: 45"
-                    min="1"
-                    required
-                >
+                <label for="tinggi_air">Tinggi Air (cm) *</label>
+                <input type="number"
+                       id="tinggi_air"
+                       name="tinggi_air"
+                       value="{{ old('tinggi_air') }}"
+                       placeholder="Contoh: 45"
+                       min="1"
+                       required>
+
                 <small>Masukkan perkiraan tinggi air dalam sentimeter.</small>
+
+                @error('tinggi_air')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="form-group">
                 <label for="keterangan">Keterangan Kejadian *</label>
-                <textarea
-                    id="keterangan"
-                    name="keterangan"
-                    rows="4"
-                    maxlength="500"
-                    placeholder="Jelaskan kondisi banjir dan situasi di lokasi..."
-                    required
-                >{{ old('keterangan') }}</textarea>
+                <textarea id="keterangan"
+                          name="keterangan"
+                          rows="4"
+                          maxlength="500"
+                          placeholder="Jelaskan kondisi banjir dan situasi di lokasi..."
+                          required>{{ old('keterangan') }}</textarea>
+
+                @error('keterangan')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="foto">Upload Foto Bukti *</label>
+
+                <input type="file"
+                       id="foto"
+                       name="foto"
+                       accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+                       required>
+
+                <small>
+                    Format yang diperbolehkan: JPG, JPEG, PNG.
+                    Ukuran maksimal 2 MB.
+                </small>
+
+                @error('foto')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="form-actions">
@@ -314,6 +383,7 @@
                 </button>
 
             </div>
+
         </form>
 
     </div>
